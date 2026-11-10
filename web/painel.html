@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel ECLSS - Missão Marte</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #171c26;
+            color: white;
+            margin: 0;
+            padding: 30px;
+        }
+
+        main {
+            max-width: 650px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #ff7547;
+        }
+
+        .card {
+            background: #252e3d;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: none;
+        }
+
+        input {
+            width: 90%;
+        }
+
+        button {
+            background: #ff7547;
+            color: white;
+            cursor: pointer;
+        }
+
+        #resultado {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <h1>Missão Marte - ECLSS</h1>
+    <p>Painel de controle dos recursos do habitat.</p>
+
+    <section class="card">
+        <h2>Solicitação de oxigênio extra</h2>
+
+        <label for="quantidadeOxigenio">Quantidade de oxigênio:</label><br>
+        <input
+            type="number"
+            id="quantidadeOxigenio"
+            min="1"
+            placeholder="Informe a quantidade"
+        >
+
+        <br>
+        <button id="btnSolicitar">Solicitar oxigênio</button>
+
+        <p id="resultado" role="status"></p>
+    </section>
+</main>
+
+<script>
+    const estoqueOxigenio = 100;
+
+    document.getElementById("btnSolicitar").addEventListener("click", function() {
+        const quantidade = Number(
+            document.getElementById("quantidadeOxigenio").value
+        );
+
+        const resultado = document.getElementById("resultado");
+
+        if (!quantidade || quantidade <= 0) {
+            resultado.textContent = "Informe uma quantidade válida.";
+            return;
+        }
+
+        if (quantidade > estoqueOxigenio) {
+            resultado.textContent = "Erro: oxigênio insuficiente!";
+            return;
+        }
+
+        resultado.textContent =
+            "Solicitação realizada com sucesso! Oxigênio solicitado: "
+            + quantidade;
+    });
+</script>
+
+</body>
+</html>
