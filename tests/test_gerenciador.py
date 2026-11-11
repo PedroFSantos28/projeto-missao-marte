@@ -134,3 +134,83 @@ def test_notificar_emergencia(gerenciador_recursos):
         "alto",
         "Oxigênio em nível crítico"
     )
+
+
+# 7. TESTES DE VALIDAÇÃO DOS DADOS INICIAIS
+
+@pytest.mark.parametrize(
+    "oxigenio, agua, astronautas",
+    [
+        (-1, 500, 4),
+        (100, -1, 4),
+        (100, 500, 0)
+    ]
+)
+def test_validar_dados_iniciais_invalidos(
+    oxigenio, agua, astronautas
+):
+    with pytest.raises(ValueError):
+        GerenciadorRecursosMarte(
+            oxigenio,
+            agua,
+            astronautas
+        )
+
+
+# 8. TESTES DE CONSUMO INVÁLIDO
+
+def test_consumir_recursos_com_valor_negativo(gerenciador_recursos):
+    with pytest.raises(ValueError):
+        gerenciador_recursos.consumir_recursos(
+            oxigenio=-10,
+            agua=20
+        )
+
+
+# 9. TESTE DE SOLICITAÇÃO DE OXIGÊNIO INVÁLIDA
+
+@pytest.mark.parametrize("quantidade", [0, -10])
+def test_solicitar_oxigenio_quantidade_invalida(
+    gerenciador_recursos, quantidade
+):
+    with pytest.raises(ValueError):
+        gerenciador_recursos.solicitar_oxigenio_extra(
+            quantidade
+        )
+
+
+# 10. TESTES DE TELEMETRIA NÃO CONFIGURADA
+
+def test_reportar_status_sem_telemetria():
+    gerenciador = GerenciadorRecursosMarte(100, 500, 4)
+
+    with pytest.raises(RuntimeError):
+        gerenciador.reportar_status()
+
+
+def test_notificar_emergencia_sem_telemetria():
+    gerenciador = GerenciadorRecursosMarte(100, 500, 4)
+
+    with pytest.raises(RuntimeError):
+        gerenciador.notificar_emergencia(
+            "alto",
+            "Oxigênio em nível crítico"
+        )
+
+
+@pytest.mark.parametrize(
+    "percentual",
+    [-10, 101, 150]
+)
+def test_racionamento_percentual_invalido(
+    gerenciador_recursos, percentual
+):
+    with pytest.raises(ValueError):
+        gerenciador_recursos.aplicar_cota_racionamento(
+            percentual
+        )
+def test_calcular_dias_autonomia(gerenciador_recursos):
+    autonomia = gerenciador_recursos.calcular_dias_autonomia()
+
+    assert autonomia["oxigenio"] > 0
+    assert autonomia["agua"] > 0
